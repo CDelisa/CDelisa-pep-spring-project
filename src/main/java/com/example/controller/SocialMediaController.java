@@ -2,6 +2,8 @@ package com.example.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.exception.BadRequestException;
 import com.example.exception.RequestConflictException;
+import com.example.exception.UnauthorizedException;
 import com.example.repository.AccountRepository;
 import com.example.service.AccountService;
 
@@ -44,5 +48,24 @@ public class SocialMediaController {
                 throw new BadRequestException();
             }
         return this.accountService.saveAccount(account);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public Account login(@RequestBody Account account) throws UnauthorizedException{
+        Account foundAccount = accountService.findByUsername(account.getUsername());
+        if(foundAccount == null){
+            throw new UnauthorizedException();
+        }
+        if(!account.getPassword().equals(foundAccount.getPassword())){
+            throw new UnauthorizedException();
+        }
+        return foundAccount;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.OK)
+    public Message CreateNewMessage(@RequestBody Message message){
+        
     }
 }

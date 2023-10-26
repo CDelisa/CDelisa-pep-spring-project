@@ -79,4 +79,9 @@ public class SocialMediaController {
         }
         return messageRepository.save(message);
     }
+    @GetMapping("/messages")
+    @ResponseStatus(HttpStatus.OK)
+    public Iterable<Message> getAllMessages(){
+        return messageRepository.findAll();
+    }
 }

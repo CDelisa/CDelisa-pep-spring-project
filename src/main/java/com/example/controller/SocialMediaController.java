@@ -1,9 +1,12 @@
 package com.example.controller;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -83,5 +86,14 @@ public class SocialMediaController {
     @ResponseStatus(HttpStatus.OK)
     public Iterable<Message> getAllMessages(){
         return messageRepository.findAll();
+    }
+    @GetMapping("/messages/{message_id}")
+    @ResponseStatus(HttpStatus.OK)
+    public Message getMessageById(@PathVariable("message_id") int id){
+        Optional<Message> messageOptional = messageRepository.findById(id);
+        if(!messageOptional.isPresent()){
+            return null;
+        }
+        return messageOptional.get();
     }
 }

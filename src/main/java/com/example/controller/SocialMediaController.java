@@ -16,6 +16,7 @@ import com.example.exception.BadRequestException;
 import com.example.exception.RequestConflictException;
 import com.example.exception.UnauthorizedException;
 import com.example.repository.AccountRepository;
+import com.example.repository.MessageRepository;
 import com.example.service.AccountService;
 
 /**
@@ -34,6 +35,9 @@ public class SocialMediaController {
     private AccountRepository accountRepository;
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.OK)
@@ -63,9 +67,16 @@ public class SocialMediaController {
         return foundAccount;
     }
 
-    @PostMapping
+    @PostMapping("/messages")
     @ResponseStatus(HttpStatus.OK)
-    public Message CreateNewMessage(@RequestBody Message message){
-        
+    public Message CreateNewMessage(@RequestBody Message message) throws BadRequestException{
+        if(accountService.findByPosted_By(message.getPosted_by()) == null){
+            throw new BadRequestException();
+        }
+        if (message.getMessage_text().equals("") ||
+                message.getMessage_text().length() > 255) {
+            throw new BadRequestException();
+        }
+        return messageRepository.save(message);
     }
 }

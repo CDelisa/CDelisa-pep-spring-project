@@ -26,4 +26,11 @@ public class AccountService {
         }
         return accountOptional.get();
     }
+    public Account findByPosted_By(int accountId){
+        var accountOptional = accountRepository.findById(accountId);
+        if(!accountOptional.isPresent()){
+            return null;
+        }
+        return accountOptional.get();
+    }
 }

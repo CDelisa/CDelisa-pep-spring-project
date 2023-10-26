@@ -8,4 +8,5 @@ import com.example.entity.Account;
 
 public interface AccountRepository extends CrudRepository<Account, Integer> {
     Optional<Account> findByUsername(String username);
+    Optional<Account> findById(int userId);
 }
